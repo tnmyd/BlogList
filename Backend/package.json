@@ -4,7 +4,11 @@
   "description": "Backend for Blog List application",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "jest --verbose",
+    "lint": "eslint ."
+
   },
   "author": "Tanmoy Das",
   "license": "GPL-3.0-or-later",
@@ -16,6 +20,10 @@
   },
   "devDependencies": {
     "eslint": "^7.0.0",
+    "jest": "^26.0.1",
     "nodemon": "^2.0.3"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }
