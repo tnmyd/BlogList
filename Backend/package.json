@@ -4,9 +4,9 @@
   "description": "A site that allows users to save information about interesting blogs they have stumbled across on the internet",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
-    "test": "jest --verbose"
+    "start": "cross-env NODE_ENV=production node index.js",
+    "dev": "cross-env NODE_ENV=development nodemon index.js",
+    "test": "cross-env NODE_ENV=test jest --verbose --runInBand"
   },
   "repository": {
     "type": "git",
@@ -25,8 +25,10 @@
     "mongoose": "^5.10.7"
   },
   "devDependencies": {
+    "cross-env": "^7.0.2",
     "jest": "^26.4.2",
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "supertest": "^5.0.0"
   },
   "jest": {
     "testEnvironment": "node"
