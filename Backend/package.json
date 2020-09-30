@@ -1,0 +1,22 @@
+{
+  "name": "bloglist-backend",
+  "version": "1.0.0",
+  "description": "A site that allows users to save information about interesting blogs they have stumbled across on the internet",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DarkHorse1997/BlogList.git"
+  },
+  "author": "Tanmoy Das",
+  "license": "GPL-3.0-only",
+  "bugs": {
+    "url": "https://github.com/DarkHorse1997/BlogList/issues"
+  },
+  "homepage": "https://github.com/DarkHorse1997/BlogList#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
