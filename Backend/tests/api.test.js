@@ -188,6 +188,25 @@ test('DELETE request to /api/blogs/:id deleted the resource with given id', asyn
     expect(responseAfterDelete).not.toContainEqual(blogToDelete)  
 })
 
+test('PUT request to /api/blogs/:id updates the Blog', async () => {
+    const response = await api.get('/api/blogs')
+    const id = response.body[0].id
+    const blogToUpdate = response.body[0]
+
+    let updatedBlogObject = {
+        ...blogToUpdate,
+        likes:50
+    } 
+
+    await api.put(`/api/blogs/${id}`)
+        .send(updatedBlogObject)
+
+    
+    const blogListAfterPost = await api.get('/api/blogs')
+    expect(blogListAfterPost.body[0].likes).toBe(50)
+
+})
+
 
 
 afterAll(() => {
