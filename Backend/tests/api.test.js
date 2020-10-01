@@ -91,6 +91,26 @@ describe('POST request to /api/blogs', () => {
         url: "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll"
     }
 
+    const BlogObjectWithoutTitle = {
+        author: "Robert C. Martin",
+        url: "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll",
+        likes: 10
+    }
+
+    const BlogObjectWithoutUrl = {
+        title: "First class tests",
+        author: "Robert C. Martin",
+        likes: 10
+    }
+
+    const BlogObjectWithoutTitleAndUrl = {
+        title: "First class tests",
+        author: "Robert C. Martin",
+        likes: 10
+    }
+
+    
+
     
 
     test('adds blog to database', async () => {
@@ -134,7 +154,27 @@ describe('POST request to /api/blogs', () => {
         expect(likes).toBe(0)
         
     })
+
+    test('without title sends status code 400', async() => {
+        await api.post('/api/blogs')
+            .send(BlogObjectWithoutTitle)
+            .expect(400)
+    })
+
+    test('without url sends status code 400', async() => {
+        await api.post('/api/blogs')
+            .send(BlogObjectWithoutUrl)
+            .expect(400)
+    })
+
+    test('without title and url sends status code 400', async() => {
+        await api.post('/api/blogs')
+            .send(BlogObjectWithoutTitleAndUrl)
+            .expect(400)
+    })
+
 })
+
 afterAll(() => {
     mongoose.connection.close();
 }
