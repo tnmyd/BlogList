@@ -175,6 +175,21 @@ describe('POST request to /api/blogs', () => {
 
 })
 
+test('DELETE request to /api/blogs/:id deleted the resource with given id', async () => {
+    const response = await api.get('/api/blogs')
+    const id = response.body[0].id
+    const blogToDelete = response.body[0]
+
+    await api
+        .delete(`/api/blogs/${id}`)
+        .expect(204)
+    
+    const responseAfterDelete = await api.get('/api/blogs')
+    expect(responseAfterDelete).not.toContainEqual(blogToDelete)  
+})
+
+
+
 afterAll(() => {
     mongoose.connection.close();
 }
