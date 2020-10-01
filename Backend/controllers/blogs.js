@@ -2,15 +2,17 @@ const blogsRouter = require('express').Router()
 const { request } = require('../app')
 const Blog = require('../models/blog')
 
-blogsRouter.get('/', (request, response) => {
-    Blog
-      .find({})
-      .then(blogs => {
-        response.json(blogs)
-      })
+blogsRouter.get('/', async (request, response) => {
+  const blogs = await Blog.find({})
+  response.json(blogs)
+    // Blog
+    //   .find({})
+    //   .then(blogs => {
+    //     response.json(blogs)
+    //   })
   })
   
-blogsRouter.post('/', (request, response) => {
+blogsRouter.post('/', async (request, response) => {
 
     const data = request.body
 
@@ -21,23 +23,34 @@ blogsRouter.post('/', (request, response) => {
     }
 
     const blog = new Blog(data)
+    
+    const result = blog.save()
+    response.status(201).json(result)
 
-    blog
-      .save()
-      .then(result => {
-        response.status(201).json(result)
-      })
+    // blog
+    //   .save()
+    //   .then(result => {
+    //     response.status(201).json(result)
+    //   })
   })
 
-blogsRouter.delete('/:id', ( request, response) => {
+blogsRouter.delete('/:id', async ( request, response) => {
   const id = request.params.id
-  Blog.findOneAndDelete({_id: id})
-    .then(deletedEntry => {
-      response.status(204).end()
-    })
-    .catch((error) => {
-      response.status(403).json({error: error})
-    } )
+
+  try{
+    const deletedEntry = await Blog.findOneAndDelete({_id:id})
+    response.status(204).end()
+  }
+  catch{
+    response.status(403).json({error: error})
+  }
+  // Blog.findOneAndDelete({_id: id})
+  //   .then(deletedEntry => {
+  //     response.status(204).end()
+  //   })
+  //   .catch((error) => {
+  //     response.status(403).json({error: error})
+  //   } )
 
 })
 
