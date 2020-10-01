@@ -85,6 +85,14 @@ describe('POST request to /api/blogs', () => {
         likes: 10
     }
 
+    const BlogObjectWithoutLikes = {
+        title: "First class tests",
+        author: "Robert C. Martin",
+        url: "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll"
+    }
+
+    
+
     test('adds blog to database', async () => {
         await api.post('/api/blogs')
             .send(newBlogObject)
@@ -112,6 +120,18 @@ describe('POST request to /api/blogs', () => {
             }
         })
         expect(blogCorrectFormat).toContainEqual(newBlogObject)
+        
+    })
+
+    test('makes likes 0 if it is not provided', async() => {
+        await api.post('/api/blogs')
+            .send(BlogObjectWithoutLikes)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
+
+        const blogListAfterPost = await api.get('/api/blogs')
+        const likes = blogListAfterPost.body[2].likes
+        expect(likes).toBe(0)
         
     })
 })
