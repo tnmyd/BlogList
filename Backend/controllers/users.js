@@ -1,5 +1,3 @@
-const { request, response } = require('express');
-
 const usersRouter = require('express').Router();
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
@@ -9,7 +7,31 @@ const bcrypt = require('bcrypt');
 usersRouter.post('/', async (request, response) => {
     const body = request.body
 
-    const saltRounds = 10
+    if(!body.username){
+        return response.status(400).json({
+            error: 'Username is missing'
+        })
+    }
+
+    if(body.username.length < 3){
+        return response.status(400).json({
+            error: 'Username is too short'
+        })
+    }
+
+    if(!body.password){
+        return response.status(400).json({
+            error: 'Password is missing'
+        })
+    }
+
+    if(body.password.length < 3){
+        return response.status(400).json({
+            error: 'Password is too short'
+        })
+    }
+
+    const saltRounds = 10;
     const passwordHash = await bcrypt.hash(body.password, saltRounds);
 
     const user= new User({
@@ -17,10 +39,17 @@ usersRouter.post('/', async (request, response) => {
         name:body.name,        
         passwordHash
     })
-
-    const savedUser = await user.save();
-
-    response.json(savedUser)
+    let savedUser = {a:4}
+    try{
+        savedUser = await user.save();
+        response.json(savedUser);
+    }
+    catch(errors)
+    {
+        response.status(400).json({
+            error:errors.message
+        })
+    }  
 });
 
 usersRouter.get('/', async (request, response) => {
