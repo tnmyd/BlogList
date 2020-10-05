@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import loginService from '../services/login'
 
 
 
-const Login = () => {
+const Login = ({user, setUser}) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [user, setUser] = useState(null);
+    
 
     const handleLogin = async (event) => {
         event.preventDefault();
@@ -17,7 +17,9 @@ const Login = () => {
                 password
             })
 
-            
+            window.localStorage.setItem(
+                'loggedInUser', JSON.stringify(user)      
+            ) 
             setUser(user);
             console.log(user);
             setPassword('');
@@ -27,6 +29,25 @@ const Login = () => {
             console.log('Wrong Credentials');
         }
     }
+
+    const handleLogout = async (event) => {
+        event.preventDefault();
+        console.log('button clicked')
+
+        window.localStorage.removeItem('loggedInUser')
+        setUser(null)
+    }
+
+    const showUser = () => (
+        <>
+        <p>
+            {user.name} logged in
+        </p>
+        <button onClick={handleLogout}>
+            Logout
+        </button>
+        </>
+    )
 
     const loginForm = () => (
         <>
@@ -61,7 +82,7 @@ const Login = () => {
         <>
         {user === null
              ? loginForm() 
-             : <p>{user.name} logged in </p>       
+             : showUser()      
         }
 
         </>
