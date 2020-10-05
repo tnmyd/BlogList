@@ -1,7 +1,10 @@
 const app = require('../app');
 const supertest = require('supertest')
 const mongoose = require('mongoose');
-const blog = require('../models/blog')
+const Blog = require('../models/blog');
+const User = require('../models/user');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const api = supertest(app)
 
 const blogs = [
@@ -42,14 +45,33 @@ const blogs = [
         likes: 2
     }
 ]
+let token = null;
 
 beforeEach(async () => {
-    await blog.deleteMany({})
+    // Deleted All blogs and Users
+    await Blog.deleteMany({})
+    await User.deleteMany({})
 
-    let blogObject = new blog(blogs[0]);
+    const passwordHash = await bcrypt.hash('sekret',10);
+    const user = new User({
+        username: "root",
+        name: "root",
+        passwordHash
+    });
+    // Created One User
+    const createdUser = await user.save();    
+    const {username, _id, ...discardedData} = createdUser;
+    const truncatedCreatedUser = {
+        username,
+        id:_id
+    }
+    token = jwt.sign(truncatedCreatedUser, process.env.SECRET);
+
+
+    let blogObject = new Blog({...blogs[0], user:_id});
     await blogObject.save()
 
-    blogObject = new blog(blogs[1]);
+    blogObject = new Blog({...blogs[1], user:_id});
     await blogObject.save()
 
 })
@@ -116,8 +138,8 @@ describe('POST request to /api/blogs', () => {
     test('adds blog to database', async () => {
         await api.post('/api/blogs')
             .send(newBlogObject)
+            .set('Authorization', `bearer ${token}`)
             .expect(201)
-
         
         const blogListAfterPost = await api.get('/api/blogs')
         expect(blogListAfterPost.body).toHaveLength(3)
@@ -127,6 +149,7 @@ describe('POST request to /api/blogs', () => {
     test('saves data correctly', async() => {
         await api.post('/api/blogs')
             .send(newBlogObject)
+            .set('Authorization', `bearer ${token}`)
             .expect(201)
             .expect('Content-Type', /application\/json/)
 
@@ -146,6 +169,7 @@ describe('POST request to /api/blogs', () => {
     test('makes likes 0 if it is not provided', async() => {
         await api.post('/api/blogs')
             .send(BlogObjectWithoutLikes)
+            .set('Authorization', `bearer ${token}`)
             .expect(201)
             .expect('Content-Type', /application\/json/)
 
@@ -158,19 +182,28 @@ describe('POST request to /api/blogs', () => {
     test('without title sends status code 400', async() => {
         await api.post('/api/blogs')
             .send(BlogObjectWithoutTitle)
+            .set('Authorization', `bearer ${token}`)
             .expect(400)
     })
 
     test('without url sends status code 400', async() => {
         await api.post('/api/blogs')
             .send(BlogObjectWithoutUrl)
+            .set('Authorization', `bearer ${token}`)
             .expect(400)
     })
 
     test('without title and url sends status code 400', async() => {
         await api.post('/api/blogs')
             .send(BlogObjectWithoutTitleAndUrl)
+            .set('Authorization', `bearer ${token}`)
             .expect(400)
+    })
+
+    test('without token sends 401 unauthorized', async() => {
+        await api.post('/api/blogs')
+            .send(BlogObjectWithoutTitleAndUrl)
+            .expect(401)
     })
 
 })
@@ -182,6 +215,7 @@ test('DELETE request to /api/blogs/:id deleted the resource with given id', asyn
 
     await api
         .delete(`/api/blogs/${id}`)
+        .set('Authorization', `bearer ${token}`)
         .expect(204)
     
     const responseAfterDelete = await api.get('/api/blogs')

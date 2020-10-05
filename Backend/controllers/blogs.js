@@ -91,9 +91,7 @@ blogsRouter.delete('/:id', async ( request, response) => {
 
   const blogToDelete = await Blog.findById(id).populate('user');
   const idOfCreator = blogToDelete.user.id;
-  console.log("creator id", idOfCreator.toString());
-  console.log("deletor id", decodedToken.id.toString());
-  console.log(decodedToken.id.toString() === idOfCreator.toString())
+  
   if(decodedToken.id.toString() !== idOfCreator.toString()) {
     return response
             .status(401)
