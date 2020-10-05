@@ -179,3 +179,64 @@ describe('author with most blogs ', () => {
     })
 
 })
+
+describe('author with most likes', () => {
+    const emptyBlog = []
+
+    const listWithOneBlog = [
+        {
+            _id: '5a422aa71b54a676234d17f8',
+            title: 'Go To Statement Considered Harmful',
+            author: 'Edsger W. Dijkstra',
+            url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+            likes: 5,
+            __v: 0
+        }
+    ]
+    const listWithmultipleBlogs = [
+        {
+            _id: '5a422aa71b54a676234d17f8',
+            title: 'Go To Statement Considered Harmful',
+            author: 'Edsger W. Dijkstra',
+            url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+            likes: 5,
+            __v: 0
+        },
+        {
+            _id: '5a422aa71b54a676234d17f8',
+            title: 'Go To Statement Considered Harmful',
+            author: 'Tanmoy Das',
+            url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+            likes: 10,
+            __v: 0
+        },
+        {
+            _id: '5a422aa71b54a676234d17f8',
+            title: 'Go To Statement Considered Harmful',
+            author: 'Tanmoy Das',
+            url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+            likes: 25,
+            __v: 0
+        }
+    ]
+    test('when list of blogs is empty', () => {
+        const result = listHelper.mostLikes(emptyBlog)        
+        expect(result).toEqual(null)
+    })
+    test('when there is one blog, is that blog', () => {
+        const result = listHelper.mostLikes(listWithOneBlog)
+        expect(result).toEqual({
+            author:'Edsger W. Dijkstra',
+            likes: 5
+        })
+    })
+
+    test('when there are multiple blogs 5', () => {
+        const result = listHelper.mostLikes(listWithmultipleBlogs)
+        expect(result).toEqual({
+            author:'Tanmoy Das',
+            likes: 35
+        })
+    })
+
+})
