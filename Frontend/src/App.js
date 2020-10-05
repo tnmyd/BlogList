@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import AddBlog from './components/AddBlog'
 import Blog from './components/Blog'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import './App.css'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [message, setMessage] = useState('');
+
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -22,96 +27,101 @@ const App = () => {
       const user = JSON.parse(loggedInUser);
       setUser(user);
       blogService.setToken(user.token)
-    
+
     }
 
   }, [])
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    
+
     try {
-        const user = await loginService.login({
-            username,
-            password
-        })
+      const user = await loginService.login({
+        username,
+        password
+      })
 
-        window.localStorage.setItem(
-            'loggedInUser', JSON.stringify(user)      
-        ) 
-        setUser(user);
-        setPassword('');
-        setUsername('');
-        blogService.setToken(user.token);
+      window.localStorage.setItem(
+        'loggedInUser', JSON.stringify(user)
+      )
+      setUser(user);
+      setPassword('');
+      setUsername('');
+      blogService.setToken(user.token);
     }
-    catch(exception) {
-        console.log('Wrong Credentials');
+    catch (exception) {
+      setErrorMessage('Invalid Credentials')
+      setTimeout(() => {
+        setErrorMessage('')
+      },5000)
     }
-}
+  }
 
-const handleLogout = async (event) => {
+  const handleLogout = async (event) => {
     event.preventDefault();
 
     window.localStorage.removeItem('loggedInUser')
     setUser(null)
-}
+  }
 
-const showUser = () => (
+  const showUser = () => (
     <>
-    <p>
+      <p>
         {user.name} logged in
     </p>
-    <button onClick={handleLogout}>
+      <button onClick={handleLogout}>
         Logout
     </button>
     </>
-)
+  )
 
-const loginForm = () => (
+  const loginForm = () => (
     <>
-    <h2>Log in to Application</h2>
-    <form onSubmit = {handleLogin}>
-            <div>
-                username 
-                <input 
-                    type = "text"
-                    value = {username}
-                    name = "Username"
-                    onChange = {(event) => setUsername(event.target.value)}
-                />
+      <h2>Log in to Application</h2>
+      <form onSubmit={handleLogin}>
+        <div>
+          username
+                <input
+            type="text"
+            value={username}
+            name="Username"
+            onChange={(event) => setUsername(event.target.value)}
+          />
 
-            </div>
-            <div>
-                password
-                <input 
-                    type = "password"
-                    value = {password}
-                    name = "Password"
-                    onChange = {(event) => setPassword(event.target.value)}
-                />
+        </div>
+        <div>
+          password
+                <input
+            type="password"
+            value={password}
+            name="Password"
+            onChange={(event) => setPassword(event.target.value)}
+          />
 
-            </div>
-            <button type="submit">login</button>
-        </form>
-        </>
-)
+        </div>
+        <button type="submit">login</button>
+      </form>
+    </>
+  )
 
   return (
     <div>
+      {errorMessage && <Notification message={errorMessage} type="failure"/>}
+      {message && <Notification message={message} type="success"/>}
 
-      {user === null 
+      {user === null
         ? loginForm()
-        : showUser() 
+        : showUser()
       }
       {user
-      
-        && 
+
+        &&
         <>
           <h2>blogs</h2>
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
           )}
-          <AddBlog/>
+          <AddBlog message={message} setMessage={setMessage} />
         </>
       }
 

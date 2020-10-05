@@ -36,3 +36,21 @@
     transform: rotate(360deg);
   }
 }
+
+.success{
+  border: 5px solid green;
+  border-radius: 5px;
+  font-size: 1.5rem;
+  color:green;
+  background-color: rgb(201, 201, 201);
+  padding:10px;
+}
+
+.failure{
+  border:5px solid red;
+  border-radius: 5px;
+  font-size: 1.5rem;
+  color:red;
+  background-color: rgb(201, 201, 201);
+  padding:10px;
+}
