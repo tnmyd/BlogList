@@ -5,6 +5,8 @@ import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import './App.css'
+import Togglable from './components/Togglable'
+import { useRef } from 'react'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -13,6 +15,8 @@ const App = () => {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [message, setMessage] = useState('');
+
+  const addBlogRef = useRef();
 
 
   useEffect(() => {
@@ -31,6 +35,10 @@ const App = () => {
     }
 
   }, [])
+
+  const hideAddBlog = () => {
+    addBlogRef.current.toggleVisibility();
+  }
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -53,7 +61,7 @@ const App = () => {
       setErrorMessage('Invalid Credentials')
       setTimeout(() => {
         setErrorMessage('')
-      },5000)
+      }, 5000)
     }
   }
 
@@ -106,8 +114,8 @@ const App = () => {
 
   return (
     <div>
-      {errorMessage && <Notification message={errorMessage} type="failure"/>}
-      {message && <Notification message={message} type="success"/>}
+      {errorMessage && <Notification message={errorMessage} type="failure" />}
+      {message && <Notification message={message} type="success" />}
 
       {user === null
         ? loginForm()
@@ -118,10 +126,13 @@ const App = () => {
         &&
         <>
           <h2>blogs</h2>
+          <Togglable buttonLabel="new note" ref={addBlogRef}>
+            <AddBlog message={message} setMessage={setMessage} hideBlogOnCreate = {hideAddBlog}/>
+          </Togglable>
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
           )}
-          <AddBlog message={message} setMessage={setMessage} />
+
         </>
       }
 
