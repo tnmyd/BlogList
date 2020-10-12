@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import blogService from '../services/blogs'
+import blogService from '../services/blogs';
 
-const AddBlog = ({setMessage, hideBlogOnCreate}) => {
+const AddBlog = ({ setMessage, hideBlogOnCreate }) => {
     const [title, setTitle] = useState('');
     const [author, setAuthor] = useState('');
     const [url, setUrl] = useState('');
@@ -14,64 +14,64 @@ const AddBlog = ({setMessage, hideBlogOnCreate}) => {
             title,
             author,
             url
-        })
-        setTitle('')
-        setAuthor('')
-        setUrl('')
-        setMessage('Created a new Blog')
-        hideBlogOnCreate()
+        });
+        setTitle('');
+        setAuthor('');
+        setUrl('');
+        setMessage('Created a new Blog');
+        hideBlogOnCreate();
         setTimeout(() => {
-            setMessage('')
-        },5000)
-    }
+            setMessage('');
+        },5000);
+    };
 
 
     return (
         <>
-        <h2>
-            create new
-        </h2>
-        <form onSubmit={handleSubmit}>
-            <div>
-                title:
-                <input 
-                    type="text"
-                    name="title"
-                    value={title}
-                    onChange={({target}) => setTitle(target.value)}
-                />
-            </div>
-            <div>
-                author:
-                <input 
-                    type="text"
-                    name="author"
-                    value={author}
-                    onChange={({target}) => setAuthor(target.value)}
-                />
-            </div>
-            <div>
-                url:
-                <input 
-                    type="text"
-                    name="url"
-                    value={url}
-                    onChange={({target}) => setUrl(target.value)}
-                />
-            </div>
-            <button type="submit">
-                create
-            </button>
+            <h2>
+                create new
+            </h2>
+            <form onSubmit={handleSubmit}>
+                <div>
+                    title:
+                    <input
+                        type="text"
+                        name="title"
+                        value={title}
+                        onChange={({ target }) => setTitle(target.value)}
+                    />
+                </div>
+                <div>
+                    author:
+                    <input
+                        type="text"
+                        name="author"
+                        value={author}
+                        onChange={({ target }) => setAuthor(target.value)}
+                    />
+                </div>
+                <div>
+                    url:
+                    <input
+                        type="text"
+                        name="url"
+                        value={url}
+                        onChange={({ target }) => setUrl(target.value)}
+                    />
+                </div>
+                <button type="submit">
+                    create
+                </button>
 
             </form>
         </>
-    )
-}
+    );
+};
 
 AddBlog.propTypes = {
     setMessage: PropTypes.func.isRequired,
     hideBlogOnCreate: PropTypes.func.isRequired
-}
+};
 
 
 export default AddBlog;

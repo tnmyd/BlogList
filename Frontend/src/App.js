@@ -8,60 +8,53 @@ import Togglable from './components/Togglable'
 import LoginForm from './components/LoginForm'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
-  const [user, setUser] = useState(null);
-  
-  const [errorMessage, setErrorMessage] = useState('');
-  const [message, setMessage] = useState('');
-
-  const addBlogRef = useRef();
+    const [blogs, setBlogs] = useState([]);
+    const [user, setUser] = useState(null);
+    const [errorMessage, setErrorMessage] = useState('');
+    const [message, setMessage] = useState('');
+    const addBlogRef = useRef();
 
 
-  useEffect(() => {
-    blogService.getAll().then(blogs => {
-      const sortedBlogs = blogs.sort((a,b) => b.likes - a.likes)
+    useEffect(() => {
+        blogService.getAll().then(blogs => {
+            const sortedBlogs = blogs.sort((a,b) => b.likes - a.likes);
 
-      setBlogs(sortedBlogs)
-    })
-  }, [blogs])
+            setBlogs(sortedBlogs);
+        });
+    }, [blogs]);
 
-  useEffect(() => {
-    const loggedInUser = window.localStorage.getItem('loggedInUser');
-    if (loggedInUser) {
-      const user = JSON.parse(loggedInUser);
-      setUser(user);
-      blogService.setToken(user.token)
-    }
-  }, [])
+    useEffect(() => {
+        const loggedInUser = window.localStorage.getItem('loggedInUser');
+        if (loggedInUser) {
+            const user = JSON.parse(loggedInUser);
+            setUser(user);
+            blogService.setToken(user.token)
+        }
+    }, []);
 
-  const hideAddBlog = () => {
-    addBlogRef.current.toggleVisibility();
-  }
+    const hideAddBlog = () => {
+        addBlogRef.current.toggleVisibility();
+    };
 
+    return (
+        <div>
+            {errorMessage && <Notification message={errorMessage} type="failure" />}
+            {message && <Notification message={message} type="success" />}
+            <LoginForm user={user} setUser={setUser} setErrorMessage={setErrorMessage}/>
+            {user
+              &&
+              <>
+                  <h2>blogs</h2>
+                  <Togglable buttonLabel="new note" ref={addBlogRef}>
+                      <AddBlog setMessage={setMessage} hideBlogOnCreate = {hideAddBlog}/>
+                  </Togglable>
+                  {blogs.map(blog =>
+                      <Blog key={blog.id} blog={blog} user = {user} />
+                  )}
+              </>
+            }
+        </div>
+    );
+};
 
-  return (
-    <div>
-      {errorMessage && <Notification message={errorMessage} type="failure" />}
-      {message && <Notification message={message} type="success" />}
-      
-      <LoginForm user={user} setUser={setUser} setErrorMessage={setErrorMessage}/>
-      {user
-
-        &&
-        <>
-          <h2>blogs</h2>
-          <Togglable buttonLabel="new note" ref={addBlogRef}>
-            <AddBlog setMessage={setMessage} hideBlogOnCreate = {hideAddBlog}/>
-          </Togglable>
-          {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} user = {user} />
-          )}
-
-        </>
-      }
-
-    </div>
-  )
-}
-
-export default App
+export default App;
