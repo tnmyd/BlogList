@@ -29,7 +29,7 @@ const Blog = ({ blog }) => {
         detailsVisible
           ? details()
           : <>
-          {blog.title}
+          {blog.title} &nbsp;
           {blog.author}
           <button onClick={()=> setDetailsVisible(!detailsVisible)}>view</button>
         </>
