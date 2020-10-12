@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import blogService from '../services/blogs'
 
-const AddBlog = ({message, setMessage, hideBlogOnCreate}) => {
+const AddBlog = ({setMessage, hideBlogOnCreate}) => {
     const [title, setTitle] = useState('');
     const [author, setAuthor] = useState('');
     const [url, setUrl] = useState('');
@@ -65,7 +66,12 @@ const AddBlog = ({message, setMessage, hideBlogOnCreate}) => {
             </form>
         </>
     )
-
 }
+
+AddBlog.propTypes = {
+    setMessage: PropTypes.func.isRequired,
+    hideBlogOnCreate: PropTypes.func.isRequired
+}
+
 
 export default AddBlog;

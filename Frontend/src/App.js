@@ -51,7 +51,7 @@ const App = () => {
         <>
           <h2>blogs</h2>
           <Togglable buttonLabel="new note" ref={addBlogRef}>
-            <AddBlog message={message} setMessage={setMessage} hideBlogOnCreate = {hideAddBlog}/>
+            <AddBlog setMessage={setMessage} hideBlogOnCreate = {hideAddBlog}/>
           </Togglable>
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} user = {user} />
