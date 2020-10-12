@@ -8,7 +8,7 @@ const Blog = ({ blog }) => {
     <div>
       <h2>{blog.title}<button onClick={()=> setDetailsVisible(!detailsVisible)}>hide</button></h2>
       <a href={blog.url}>{blog.url}</a>
-      <p>likes <button>like</button></p>
+      <p>likes {blog.likes}<button>like</button></p>
       <p>{blog.author}</p>
     </div>
   )
