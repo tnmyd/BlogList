@@ -4,8 +4,7 @@ const baseUrl = '/api/blogs'
 let token = null;
 
 const setToken = newToken => {  
-  token = `bearer ${newToken}`
-  console.log('set token',token);
+  token = `bearer ${newToken}`;
 }
 
 const getAll = async () => {
@@ -26,9 +25,24 @@ const updateBlog = async (blog,id) => {
   return response.data;
 }
 
+const deleteBlog = async (id) => {
+  const config = {    
+    headers: { Authorization: token }
+  }
+  try{
+    const response = await axios.delete(`${baseUrl}/${id}`, config);
+    return response.data;
+  }
+  catch{
+    alert("Sorry not created by you")
+  }
+  
+}
+
 export default { 
   getAll,
   setToken,
   addBlog,
-  updateBlog
+  updateBlog,
+  deleteBlog
 }

@@ -54,7 +54,7 @@ const App = () => {
             <AddBlog message={message} setMessage={setMessage} hideBlogOnCreate = {hideAddBlog}/>
           </Togglable>
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} />
+            <Blog key={blog.id} blog={blog} user = {user} />
           )}
 
         </>
